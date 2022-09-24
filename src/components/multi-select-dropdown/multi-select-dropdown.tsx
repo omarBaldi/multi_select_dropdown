@@ -4,7 +4,6 @@ import MultiSelectDropdownProps from './dto';
 
 /**
  *
- * TODO: replace magic number (optionsNumber) with constant variable
  * TODO: add scoped style for component (using styled components)
  * TODO: implement theme (using styled components)
  */
@@ -22,10 +21,31 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
   const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
 
+  const removeOption = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!(e.target instanceof HTMLButtonElement)) return;
+
+    //Get the parent element to access the data attribute
+    const parentElement = e.target.parentElement;
+    const key = parentElement?.dataset['key'];
+
+    if (!key) return;
+
+    //Delete the option based on key
+    setOptionsSelected((prevOptions) => {
+      const updatedOptions = new Map(prevOptions);
+      updatedOptions.delete(key);
+
+      return updatedOptions;
+    });
+  };
+
   const handleOptionClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!(e.target instanceof HTMLDivElement)) return;
 
-    const { key, value } = e.target.dataset;
+    const dataAttributes = e.target.dataset;
+    const key = dataAttributes['key'];
+    const value = dataAttributes['value'];
+
     if (!key || !value) return;
 
     /* As soon as one of the options is clicked, I need to check if
@@ -72,7 +92,10 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
         {optionsSelected.size > 0 ? (
           <div>
             {[...optionsSelected].map(([key, value]) => (
-              <div key={key}>{value}</div>
+              <div key={key} data-key={key}>
+                <span>{value}</span>
+                <button onClick={removeOption}>x</button>
+              </div>
             ))}
           </div>
         ) : (
