@@ -1,18 +1,33 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import MultiSelectDropdownProps from './dto';
 
 /**
  *
+ * TODO: add optional number prop to determine how many options should be in view
  * TODO: add scoped style for component (using styled components)
  * TODO: implement theme (using styled components)
  */
 const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   placeholderLabel = 'Choose an option',
   options,
+  optionsNumber = 2,
 }: MultiSelectDropdownProps) => {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
 
   const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
+
+  const optionsContainerRef = useCallback(
+    (el: HTMLDivElement) => {
+      if (el && options.length > 0) {
+        const firstChildren = [...el.children][0];
+        const firstChildrenHeight = firstChildren.clientHeight;
+        const maxContainerHeight = firstChildrenHeight * optionsNumber;
+
+        el.style.maxHeight = `${maxContainerHeight}px`;
+      }
+    },
+    [options, optionsNumber]
+  );
 
   return (
     <div style={{ border: '1px solid', position: 'relative' }}>
@@ -32,11 +47,13 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
       {openDropdown && (
         <div
+          ref={optionsContainerRef}
           style={{
             border: '1px solid red',
             position: 'absolute',
             left: 0,
             right: 0,
+            overflow: 'auto',
           }}
         >
           {options.map(({ id, label }) => (
