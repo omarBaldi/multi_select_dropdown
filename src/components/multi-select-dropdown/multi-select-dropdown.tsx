@@ -1,20 +1,48 @@
-import { FC, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
+import { DEFAULT_OPTIONS_NUMBER } from '../../constant';
 import MultiSelectDropdownProps from './dto';
 
 /**
  *
- * TODO: add optional number prop to determine how many options should be in view
+ * TODO: replace magic number (optionsNumber) with constant variable
  * TODO: add scoped style for component (using styled components)
  * TODO: implement theme (using styled components)
  */
 const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   placeholderLabel = 'Choose an option',
   options,
-  optionsNumber = 2,
+  optionsNumber = DEFAULT_OPTIONS_NUMBER,
 }: MultiSelectDropdownProps) => {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
 
+  //Map containing as a key the option id and as a value the label itself
+  const [optionsSelected, setOptionsSelected] = useState<Map<string, string>>(
+    new Map()
+  );
+
   const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
+
+  const handleOptionClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!(e.target instanceof HTMLDivElement)) return;
+
+    const { key, value } = e.target.dataset;
+    if (!key || !value) return;
+
+    /* As soon as one of the options is clicked, I need to check if
+      the current was previously stored. 
+          If yes ---> remove it
+          If no ---> add it 
+      */
+    setOptionsSelected((prevOptions) => {
+      const updatedOptions = new Map(prevOptions);
+
+      updatedOptions.has(key)
+        ? updatedOptions.delete(key)
+        : updatedOptions.set(key, value);
+
+      return updatedOptions;
+    });
+  };
 
   const optionsContainerRef = useCallback(
     (el: HTMLDivElement) => {
@@ -41,7 +69,15 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           cursor: 'pointer',
         }}
       >
-        <p>{placeholderLabel}</p>
+        {optionsSelected.size > 0 ? (
+          <div>
+            {[...optionsSelected].map(([key, value]) => (
+              <div key={key}>{value}</div>
+            ))}
+          </div>
+        ) : (
+          <p>{placeholderLabel}</p>
+        )}
         <button>.</button>
       </div>
 
@@ -57,7 +93,13 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           }}
         >
           {options.map(({ id, label }) => (
-            <div key={`option-${id}`} style={{ padding: '1rem 0.5rem' }}>
+            <div
+              key={`option-${id}`}
+              data-key={`option-${id}`}
+              data-value={label}
+              onClick={handleOptionClick}
+              style={{ padding: '1rem 0.5rem', cursor: 'pointer' }}
+            >
               {label}
             </div>
           ))}
