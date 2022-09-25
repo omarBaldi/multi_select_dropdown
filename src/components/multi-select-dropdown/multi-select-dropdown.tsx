@@ -1,11 +1,18 @@
 import React, { FC, useCallback, useState } from 'react';
 import { DEFAULT_OPTIONS_NUMBER } from '../../constant';
+import { DropdownOption } from '../dropdown-option';
+import DropdownOptionProps, {
+  DropdownParamsFuncType,
+} from '../dropdown-option/dto';
 import MultiSelectDropdownProps from './dto';
 
 /**
  *
  * TODO: add scoped style for component (using styled components)
  * TODO: implement theme (using styled components)
+ * TODO: add some mock-up data to verify that the filter functionality based on options selected works
+ * TODO: integrate QR codes to store React components into them ??
+ * (have QR code alongside the component you want to get the text from)
  */
 const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   placeholderLabel = 'Choose an option',
@@ -45,20 +52,10 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     });
   };
 
-  const handleOptionClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!(e.target instanceof HTMLDivElement)) return;
-
-    const dataAttributes = e.target.dataset;
-    const key = dataAttributes['key'];
-    const value = dataAttributes['value'];
-
-    if (!key || !value) return;
-
-    /* As soon as one of the options is clicked, I need to check if
-      the current was previously stored. 
-          If yes ---> remove it
-          If no ---> add it 
-      */
+  const handleOptionClick = ({
+    id: key,
+    label: value,
+  }: DropdownParamsFuncType) => {
     setOptionsSelected((prevOptions) => {
       const updatedOptions = new Map(prevOptions);
 
@@ -82,6 +79,20 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     },
     [options, optionsNumber]
   );
+
+  const renderOption = (option: DropdownOptionProps) => {
+    const key = `opt-${option.id}`;
+
+    return (
+      <DropdownOption
+        {...{
+          key,
+          ...option,
+          onOptionClick: handleOptionClick,
+        }}
+      />
+    );
+  };
 
   return (
     <div style={{ border: '1px solid', position: 'relative' }}>
@@ -121,17 +132,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
             overflow: 'auto',
           }}
         >
-          {options.map(({ id, label }) => (
-            <div
-              key={`option-${id}`}
-              data-key={`option-${id}`}
-              data-value={label}
-              onClick={handleOptionClick}
-              style={{ padding: '1rem 0.5rem', cursor: 'pointer' }}
-            >
-              {label}
-            </div>
-          ))}
+          {options.map(renderOption)}
         </div>
       )}
     </div>

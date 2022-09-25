@@ -1,11 +1,8 @@
-export type OptionProps = {
-  id: number;
-  label: string;
-};
+import { DropdownOptionProps } from '../dropdown-option';
 
 type MultiSelectDropdownProps = {
   placeholderLabel?: string;
-  options: OptionProps[];
+  options: DropdownOptionProps[];
   optionsNumber?: number;
 };
 
