@@ -19,7 +19,13 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     new Map()
   );
 
-  const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
+  const toggleDrodpown = (e: React.MouseEvent<HTMLDivElement>) => {
+    //if one the options placed inside the parent is being clicked, prevent from changing state
+    if (e.target !== e.currentTarget) return;
+    setOpenDropdown((prevState) => !prevState);
+  };
+
+  const removeAllOptions = () => setOptionsSelected(new Map());
 
   const removeOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
@@ -91,7 +97,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
       >
         {optionsSelected.size > 0 ? (
           <div>
-            {[...optionsSelected].map(([key, value]) => (
+            {[...optionsSelected].map(([key, value]: [string, string]) => (
               <div key={key} data-key={key}>
                 <span>{value}</span>
                 <button onClick={removeOption}>x</button>
@@ -101,7 +107,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
         ) : (
           <p>{placeholderLabel}</p>
         )}
-        <button>.</button>
+        <button onClick={removeAllOptions}>x</button>
       </div>
 
       {openDropdown && (
