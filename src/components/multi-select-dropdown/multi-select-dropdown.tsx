@@ -33,8 +33,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
   const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
 
-  //TODO: use built-in Map clear method
-  const removeAllOptions = () => setOptionsSelected(new Map());
+  const removeAllOptions = () => optionsSelected.clear();
 
   const removeOption = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!(e.target instanceof HTMLButtonElement)) return;
