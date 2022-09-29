@@ -1,13 +1,14 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { DropdownOptionProps } from './components/dropdown-option';
-import { MultiSelectedDropdownStyled } from './components/multi-select-dropdown/style';
+import { MultiSelectDropdown } from './components/multi-select-dropdown';
 import GlobalStyle from './globalStyle';
 
 /**
  *
  * @returns
  * TODO: create multi-select dropdown component
+ * TODO: move reach-helmet to main component
  */
 function App() {
   const dropdownOptions: DropdownOptionProps[] = [...Array(10)].map(
@@ -37,7 +38,10 @@ function App() {
       <div className='App'>
         <GlobalStyle />
         <div className='container'>
-          <MultiSelectedDropdownStyled options={dropdownOptions} />
+          <MultiSelectDropdown
+            options={dropdownOptions}
+            additionalStyle={{ marginTop: '5rem' }}
+          />
         </div>
       </div>
     </>

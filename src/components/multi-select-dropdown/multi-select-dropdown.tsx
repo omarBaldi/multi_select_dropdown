@@ -5,9 +5,13 @@ import DropdownOptionProps, {
   DropdownParamsFuncType,
 } from '../dropdown-option/dto';
 import MultiSelectDropdownProps from './dto';
+import {
+  DropdownContainerStyled,
+  OptionsContainerStyled,
+  SubWrapperStyled,
+} from './style';
 
 /**
- *
  * TODO: add scoped style for component (using styled components)
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
@@ -18,6 +22,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   placeholderLabel = 'Choose an option',
   options,
   optionsNumber = DEFAULT_OPTIONS_NUMBER,
+  additionalStyle = {},
 }: MultiSelectDropdownProps) => {
   const [openDropdown, setOpenDropdown] = useState<boolean>(false);
 
@@ -26,12 +31,9 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     new Map()
   );
 
-  const toggleDrodpown = (e: React.MouseEvent<HTMLDivElement>) => {
-    //if one the options placed inside the parent is being clicked, prevent from changing state
-    if (e.target !== e.currentTarget) return;
-    setOpenDropdown((prevState) => !prevState);
-  };
+  const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
 
+  //TODO: use built-in Map clear method
   const removeAllOptions = () => setOptionsSelected(new Map());
 
   const removeOption = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -84,28 +86,13 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     const key = `opt-${option.id}`;
 
     return (
-      <DropdownOption
-        {...{
-          key,
-          ...option,
-          onOptionClick: handleOptionClick,
-        }}
-      />
+      <DropdownOption key={key} {...option} onOptionClick={handleOptionClick} />
     );
   };
 
   return (
-    <div style={{ border: '1px solid', position: 'relative' }}>
-      <div
-        onClick={toggleDrodpown}
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '0 0.5rem',
-          cursor: 'pointer',
-        }}
-      >
+    <DropdownContainerStyled style={{ ...additionalStyle }}>
+      <SubWrapperStyled onClick={toggleDrodpown}>
         {optionsSelected.size > 0 ? (
           <div>
             {[...optionsSelected].map(([key, value]: [string, string]) => (
@@ -119,23 +106,14 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           <p>{placeholderLabel}</p>
         )}
         <button onClick={removeAllOptions}>x</button>
-      </div>
+      </SubWrapperStyled>
 
       {openDropdown && (
-        <div
-          ref={optionsContainerRef}
-          style={{
-            border: '1px solid red',
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            overflow: 'auto',
-          }}
-        >
+        <OptionsContainerStyled ref={optionsContainerRef}>
           {options.map(renderOption)}
-        </div>
+        </OptionsContainerStyled>
       )}
-    </div>
+    </DropdownContainerStyled>
   );
 };
 

@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import DropdownOptionProps from './dto';
+import { DropdownOptionStyled } from './style';
 
 const DropdownOption: FC<DropdownOptionProps> = ({
   onOptionClick,
@@ -8,12 +9,9 @@ const DropdownOption: FC<DropdownOptionProps> = ({
   const handleOptionClick = () => onOptionClick?.(restProps);
 
   return (
-    <div
-      onClick={handleOptionClick}
-      style={{ padding: '1rem 0.5rem', cursor: 'pointer' }}
-    >
+    <DropdownOptionStyled onClick={handleOptionClick}>
       {restProps.label}
-    </div>
+    </DropdownOptionStyled>
   );
 };
 

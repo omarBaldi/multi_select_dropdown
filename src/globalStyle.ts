@@ -12,10 +12,11 @@ const GlobalStyle = createGlobalStyle`
     html,
     body {
         font-family: 'Lato', sans-serif;
+        background-color: #222;
+        color: white;
     }
 
     .container {
-        height: 100vh;
         width: 100%;
         display: flex;
         justify-content: center;
