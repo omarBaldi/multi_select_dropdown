@@ -14,7 +14,7 @@ function App() {
   const dropdownOptions: DropdownOptionProps[] = [...Array(10)].map(
     (_, index: number) => ({
       id: index.toString(),
-      label: `Dropdown label #${index.toString().padStart(2, '0')}`,
+      label: `DP #${index.toString().padStart(2, '0')}`,
     })
   );
 

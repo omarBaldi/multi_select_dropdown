@@ -6,13 +6,15 @@ import DropdownOptionProps, {
 } from '../dropdown-option/dto';
 import MultiSelectDropdownProps from './dto';
 import {
+  ButtonRemoveOptionsStyled,
   DropdownContainerStyled,
   OptionsContainerStyled,
+  OptionSelectedStyled,
+  OptionsSelectedContainerStyled,
   SubWrapperStyled,
 } from './style';
 
 /**
- * TODO: add scoped style for component (using styled components)
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
  * TODO: integrate QR codes to store React components into them ??
@@ -28,7 +30,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
   //Map containing as a key the option id and as a value the label itself
   const [optionsSelected, setOptionsSelected] = useState<Map<string, string>>(
-    new Map()
+    new Map().set('hello', 'ok').set('now', 'ok2')
   );
 
   const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
@@ -93,18 +95,20 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     <DropdownContainerStyled style={{ ...additionalStyle }}>
       <SubWrapperStyled onClick={toggleDrodpown}>
         {optionsSelected.size > 0 ? (
-          <div>
+          <OptionsSelectedContainerStyled>
             {[...optionsSelected].map(([key, value]: [string, string]) => (
-              <div key={key} data-key={key}>
+              <OptionSelectedStyled key={key} data-key={key}>
                 <span>{value}</span>
                 <button onClick={removeOption}>x</button>
-              </div>
+              </OptionSelectedStyled>
             ))}
-          </div>
+          </OptionsSelectedContainerStyled>
         ) : (
           <p>{placeholderLabel}</p>
         )}
-        <button onClick={removeAllOptions}>x</button>
+        <ButtonRemoveOptionsStyled onClick={removeAllOptions}>
+          <span>X</span>
+        </ButtonRemoveOptionsStyled>
       </SubWrapperStyled>
 
       {openDropdown && (

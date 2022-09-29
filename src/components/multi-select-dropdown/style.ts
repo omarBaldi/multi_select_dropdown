@@ -15,6 +15,22 @@ export const SubWrapperStyled = styled.div`
   cursor: pointer;
 `;
 
+export const OptionsSelectedContainerStyled = styled.div`
+  flex: 1;
+  display: flex;
+`;
+
+export const OptionSelectedStyled = styled.div`
+  margin-right: 0.5rem;
+  background-color: #0066ff;
+  padding: 0.2rem 0.7rem;
+  border-radius: 5px;
+`;
+
+export const ButtonRemoveOptionsStyled = styled.button`
+  margin-left: 0.5rem;
+`;
+
 export const OptionsContainerStyled = styled.div`
   position: absolute;
   margin-top: 0.5rem;
