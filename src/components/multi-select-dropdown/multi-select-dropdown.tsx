@@ -30,26 +30,17 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
   //Map containing as a key the option id and as a value the label itself
   const [optionsSelected, setOptionsSelected] = useState<Map<string, string>>(
-    new Map().set('hello', 'ok').set('now', 'ok2')
+    new Map()
   );
 
   const toggleDrodpown = () => setOpenDropdown((prevState) => !prevState);
 
   const removeAllOptions = () => optionsSelected.clear();
 
-  const removeOption = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!(e.target instanceof HTMLButtonElement)) return;
-
-    //Get the parent element to access the data attribute
-    const parentElement = e.target.parentElement;
-    const key = parentElement?.dataset['key'];
-
-    if (!key) return;
-
-    //Delete the option based on key
+  const removeOption = (optionId: string) => {
     setOptionsSelected((prevOptions) => {
       const updatedOptions = new Map(prevOptions);
-      updatedOptions.delete(key);
+      updatedOptions.delete(optionId);
 
       return updatedOptions;
     });
@@ -91,17 +82,44 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     );
   };
 
+  const renderOptionsSelected = (options: Map<string, string>) => {
+    /* If the options are less than N elements, render those,
+    otherwise render the first N elements + element containing the rest  */
+    const firstElements = [...options].slice(0, 3);
+    const rest = [...options].slice(3);
+    console.log(rest);
+
+    return (
+      <div style={{ display: 'flex' }}>
+        {firstElements.map(([key, value]: [string, string]) => {
+          return (
+            <OptionSelectedStyled key={key} onClick={() => removeOption(key)}>
+              <span>{value}</span>
+            </OptionSelectedStyled>
+          );
+        })}
+
+        {rest.length > 0 && (
+          <div
+            style={{
+              backgroundColor: 'red',
+              color: 'white',
+              padding: '0.2rem 0.5rem',
+            }}
+          >
+            <span>{rest.length.toString()}</span>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <DropdownContainerStyled style={{ ...additionalStyle }}>
       <SubWrapperStyled onClick={toggleDrodpown}>
         {optionsSelected.size > 0 ? (
           <OptionsSelectedContainerStyled>
-            {[...optionsSelected].map(([key, value]: [string, string]) => (
-              <OptionSelectedStyled key={key} data-key={key}>
-                <span>{value}</span>
-                <button onClick={removeOption}>x</button>
-              </OptionSelectedStyled>
-            ))}
+            {renderOptionsSelected(optionsSelected)}
           </OptionsSelectedContainerStyled>
         ) : (
           <p>{placeholderLabel}</p>
