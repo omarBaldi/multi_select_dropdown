@@ -44,17 +44,20 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     });
   };
 
-  const handleOptionClick = ({ id: key, label: value }: OptionType) => {
-    setOptionsSelected((prevOptions) => {
-      const updatedOptions = new Map(prevOptions);
+  const handleOptionClick = useCallback(
+    ({ id: key, label: value }: OptionType) => {
+      setOptionsSelected((prevOptions) => {
+        const updatedOptions = new Map(prevOptions);
 
-      updatedOptions.has(key)
-        ? updatedOptions.delete(key)
-        : updatedOptions.set(key, value);
+        updatedOptions.has(key)
+          ? updatedOptions.delete(key)
+          : updatedOptions.set(key, value);
 
-      return updatedOptions;
-    });
-  };
+        return updatedOptions;
+      });
+    },
+    []
+  );
 
   const optionsContainerRef = useCallback(
     (el: HTMLDivElement) => {
@@ -88,7 +91,6 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     otherwise render the first N elements + element containing the rest  */
     const firstElements = [...options].slice(0, 3);
     const rest = [...options].slice(3);
-    console.log(rest);
 
     return (
       <div style={{ display: 'flex' }}>
