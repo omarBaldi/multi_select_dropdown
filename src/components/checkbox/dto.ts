@@ -1,10 +1,10 @@
 import React from 'react';
+import { OptionType } from '../multi-select-dropdown/dto';
 
-type CheckboxProps = {
-  label: string;
+type CheckboxProps = OptionType & {
   checked: boolean;
   additionalStyle?: React.CSSProperties;
-  onCheckboxClick: (checked: boolean) => void;
+  onCheckboxClick: ({ id, label }: OptionType) => void;
 };
 
 export default CheckboxProps;

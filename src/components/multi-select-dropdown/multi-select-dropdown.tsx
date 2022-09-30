@@ -1,10 +1,7 @@
 import React, { FC, useCallback, useState } from 'react';
 import { DEFAULT_OPTIONS_NUMBER } from '../../constant';
-import { DropdownOption } from '../dropdown-option';
-import DropdownOptionProps, {
-  DropdownParamsFuncType,
-} from '../dropdown-option/dto';
-import MultiSelectDropdownProps from './dto';
+import { Checkbox } from '../checkbox';
+import MultiSelectDropdownProps, { OptionType } from './dto';
 import {
   ButtonRemoveOptionsStyled,
   DropdownContainerStyled,
@@ -15,6 +12,7 @@ import {
 } from './style';
 
 /**
+ * TODO: create dropdown option container component (optional prop to set columns grid)
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
  * TODO: integrate QR codes to store React components into them ??
@@ -26,7 +24,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   optionsNumber = DEFAULT_OPTIONS_NUMBER,
   additionalStyle = {},
 }: MultiSelectDropdownProps) => {
-  const [openDropdown, setOpenDropdown] = useState<boolean>(false);
+  const [openDropdown, setOpenDropdown] = useState<boolean>(true);
 
   //Map containing as a key the option id and as a value the label itself
   const [optionsSelected, setOptionsSelected] = useState<Map<string, string>>(
@@ -46,10 +44,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     });
   };
 
-  const handleOptionClick = ({
-    id: key,
-    label: value,
-  }: DropdownParamsFuncType) => {
+  const handleOptionClick = ({ id: key, label: value }: OptionType) => {
     setOptionsSelected((prevOptions) => {
       const updatedOptions = new Map(prevOptions);
 
@@ -74,11 +69,17 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     [options, optionsNumber]
   );
 
-  const renderOption = (option: DropdownOptionProps) => {
-    const key = `opt-${option.id}`;
+  const renderOption = (optionProps: OptionType) => {
+    const key = `opt-${optionProps.id}`;
+    const shouldBeChecked = optionsSelected.has(optionProps.id);
 
     return (
-      <DropdownOption key={key} {...option} onOptionClick={handleOptionClick} />
+      <Checkbox
+        key={key}
+        {...optionProps}
+        checked={shouldBeChecked}
+        onCheckboxClick={handleOptionClick}
+      />
     );
   };
 
@@ -131,7 +132,15 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
       {openDropdown && (
         <OptionsContainerStyled ref={optionsContainerRef}>
-          {options.map(renderOption)}
+          <div
+            style={{
+              border: '1px solid red',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+            }}
+          >
+            {options.map(renderOption)}
+          </div>
         </OptionsContainerStyled>
       )}
     </DropdownContainerStyled>

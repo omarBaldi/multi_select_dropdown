@@ -1,28 +1,23 @@
-import React, { FC, useRef } from 'react';
+import React, { FC } from 'react';
 import CheckboxProps from './dto';
 
 const Checkbox: FC<CheckboxProps> = ({
+  id,
   label,
   checked,
   additionalStyle = {},
   onCheckboxClick,
 }: CheckboxProps) => {
-  const checkboxRef = useRef<HTMLInputElement>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked } = e.target;
-    onCheckboxClick(checked);
-  };
+  const handleCheckboxClick = () => onCheckboxClick({ id, label });
 
   return (
-    <div style={{ ...additionalStyle }}>
+    <div style={{ ...additionalStyle }} onClick={handleCheckboxClick}>
       <input
+        id={id}
         type='checkbox'
-        name=''
-        id=''
-        ref={checkboxRef}
-        onChange={handleInputChange}
-        defaultChecked={checked}
+        name={`checkbox-${id}`}
+        checked={checked}
+        readOnly
       />
       <span style={{ marginLeft: '0.5rem' }}>{label}</span>
     </div>

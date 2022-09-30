@@ -1,9 +1,13 @@
 import React from 'react';
-import { DropdownOptionProps } from '../dropdown-option';
+
+export type OptionType = {
+  id: string;
+  label: string;
+};
 
 type MultiSelectDropdownProps = {
   placeholderLabel?: string;
-  options: DropdownOptionProps[];
+  options: OptionType[];
   optionsNumber?: number;
   additionalStyle?: React.CSSProperties;
 };
