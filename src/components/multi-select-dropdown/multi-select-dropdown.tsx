@@ -1,6 +1,7 @@
-import React, { FC, useCallback, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { DropdownOptionContainer } from '../dropdown-option-container';
 import { ReactComponent as CloseIcon } from '../../assets/icons/close.svg';
+import { DEFAULT_OPTIONS_VISIBLE } from '../../constant';
 import MultiSelectDropdownProps, { OptionType } from './dto';
 import {
   ButtonRemoveOptionsStyled,
@@ -13,7 +14,6 @@ import {
 } from './style';
 
 /**
- * TODO: replace magic number with constant variable (renderOptionsSelected)
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
  */
@@ -58,8 +58,8 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   );
 
   const renderOptionsSelected = (options: Map<string, string>) => {
-    const firstElements = [...options].slice(0, 3);
-    const otherElements = [...options].slice(3);
+    const firstElements = [...options].slice(0, DEFAULT_OPTIONS_VISIBLE);
+    const otherElements = [...options].slice(DEFAULT_OPTIONS_VISIBLE);
     const otherElementsLengthLabel = otherElements.length.toString();
 
     return (

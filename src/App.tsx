@@ -1,17 +1,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import { DropdownOptionProps } from './components/dropdown-option';
 import { MultiSelectDropdown } from './components/multi-select-dropdown';
 import GlobalStyle from './globalStyle';
 
-/**
- *
- * @returns
- * TODO: create multi-select dropdown component
- * TODO: move reach-helmet to main component
- */
 function App() {
-  const dropdownOptions: DropdownOptionProps[] = [...Array(10)].map(
+  const dropdownOptions: { id: string; label: string }[] = [...Array(10)].map(
     (_, index: number) => ({
       id: index.toString(),
       label: `DP #${index.toString().padStart(2, '0')}`,
