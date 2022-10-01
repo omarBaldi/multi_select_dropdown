@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { DEFAULT_OPTIONS_NUMBER } from '../../constant';
-import { Checkbox } from '../checkbox';
+import { DropdownOptionContainer } from '../dropdown-option-container';
 import MultiSelectDropdownProps, { OptionType } from './dto';
 import {
   ButtonRemoveOptionsStyled,
@@ -13,6 +13,8 @@ import {
 
 /**
  * TODO: create dropdown option container component (optional prop to set columns grid)
+ * TODO: move OptionsContainerStyled this inside dropdown option container
+ * TODO: adjust max height ref
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
  * TODO: integrate QR codes to store React components into them ??
@@ -72,20 +74,7 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     [options, optionsNumber]
   );
 
-  const renderOption = (optionProps: OptionType) => {
-    const key = `opt-${optionProps.id}`;
-    const shouldBeChecked = optionsSelected.has(optionProps.id);
-
-    return (
-      <Checkbox
-        key={key}
-        {...optionProps}
-        checked={shouldBeChecked}
-        onCheckboxClick={handleOptionClick}
-      />
-    );
-  };
-
+  //TODO: replace magic number with constant variable (3)
   const renderOptionsSelected = (options: Map<string, string>) => {
     /* If the options are less than N elements, render those,
     otherwise render the first N elements + element containing the rest  */
@@ -134,15 +123,12 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
 
       {openDropdown && (
         <OptionsContainerStyled ref={optionsContainerRef}>
-          <div
-            style={{
-              border: '1px solid red',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-            }}
-          >
-            {options.map(renderOption)}
-          </div>
+          <DropdownOptionContainer
+            options={options}
+            optionsIdSelected={[...optionsSelected.keys()]}
+            additionalStyle={{ paddingBottom: '1.5rem' }}
+            onOptionClick={handleOptionClick}
+          />
         </OptionsContainerStyled>
       )}
     </DropdownContainerStyled>
