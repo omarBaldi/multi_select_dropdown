@@ -1,9 +1,12 @@
 import React, { FC, useCallback, useState } from 'react';
 import { DropdownOptionContainer } from '../dropdown-option-container';
+import { ReactComponent as CloseIcon } from '../../assets/icons/close.svg';
 import MultiSelectDropdownProps, { OptionType } from './dto';
 import {
   ButtonRemoveOptionsStyled,
+  DotsStyled,
   DropdownContainerStyled,
+  OptionSelectedBubbleStyled,
   OptionSelectedStyled,
   OptionsSelectedContainerStyled,
   SubWrapperStyled,
@@ -13,8 +16,6 @@ import {
  * TODO: replace magic number with constant variable (renderOptionsSelected)
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
- * TODO: integrate QR codes to store React components into them ??
- * (have QR code alongside the component you want to get the text from)
  */
 const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   placeholderLabel = 'Choose an option',
@@ -57,10 +58,9 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   );
 
   const renderOptionsSelected = (options: Map<string, string>) => {
-    /* If the options are less than N elements, render those,
-    otherwise render the first N elements + element containing the rest  */
     const firstElements = [...options].slice(0, 3);
-    const rest = [...options].slice(3);
+    const otherElements = [...options].slice(3);
+    const otherElementsLengthLabel = otherElements.length.toString();
 
     return (
       <div style={{ display: 'flex' }}>
@@ -72,16 +72,16 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
           );
         })}
 
-        {rest.length > 0 && (
-          <div
-            style={{
-              backgroundColor: 'red',
-              color: 'white',
-              padding: '0.2rem 0.5rem',
-            }}
-          >
-            <span>{rest.length.toString()}</span>
-          </div>
+        {otherElements.length > 0 && (
+          <>
+            <DotsStyled>
+              <span>...</span>
+            </DotsStyled>
+
+            <OptionSelectedBubbleStyled>
+              <span>{otherElementsLengthLabel}</span>
+            </OptionSelectedBubbleStyled>
+          </>
         )}
       </div>
     );
@@ -97,8 +97,9 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
         ) : (
           <p>{placeholderLabel}</p>
         )}
+
         <ButtonRemoveOptionsStyled onClick={removeAllOptions}>
-          <span>X</span>
+          <CloseIcon />
         </ButtonRemoveOptionsStyled>
       </SubWrapperStyled>
 

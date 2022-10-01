@@ -24,6 +24,19 @@ const DropdownOptionContainer: FC<DropdownOptionContainerProps> = ({
     padding: '0.5rem',
   });
 
+  const optionContainerRef = useCallback(
+    (el: HTMLDivElement) => {
+      if (el && options.length > 0) {
+        const firstElement = [...el.children][0];
+        const firstElementHeight = firstElement.clientHeight;
+
+        const maxContainerHeight = firstElementHeight * rowsNumber;
+        el.style.maxHeight = `${maxContainerHeight}px`;
+      }
+    },
+    [options, rowsNumber]
+  );
+
   const renderOption = (optionProps: OptionType) => {
     const key = `opt-${optionProps.id}`;
     const shouldBeChecked = optionsIdSelected.includes(optionProps.id);
@@ -38,19 +51,6 @@ const DropdownOptionContainer: FC<DropdownOptionContainerProps> = ({
       />
     );
   };
-
-  const optionContainerRef = useCallback(
-    (el: HTMLDivElement) => {
-      if (el && options.length > 0) {
-        const firstElement = [...el.children][0];
-        const firstElementHeight = firstElement.clientHeight;
-
-        const maxContainerHeight = firstElementHeight * rowsNumber;
-        el.style.maxHeight = `${maxContainerHeight}px`;
-      }
-    },
-    [options, rowsNumber]
-  );
 
   return (
     <OptionsContainerStyled style={{ ...additionalStyle }}>
