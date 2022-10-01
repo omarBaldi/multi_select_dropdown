@@ -8,7 +8,6 @@ export type OptionType = {
 type MultiSelectDropdownProps = {
   placeholderLabel?: string;
   options: OptionType[];
-  optionsNumber?: number;
   additionalStyle?: React.CSSProperties;
 };
 

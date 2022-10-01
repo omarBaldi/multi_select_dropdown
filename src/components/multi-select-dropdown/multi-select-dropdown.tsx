@@ -1,20 +1,16 @@
 import React, { FC, useCallback, useState } from 'react';
-import { DEFAULT_OPTIONS_NUMBER } from '../../constant';
 import { DropdownOptionContainer } from '../dropdown-option-container';
 import MultiSelectDropdownProps, { OptionType } from './dto';
 import {
   ButtonRemoveOptionsStyled,
   DropdownContainerStyled,
-  OptionsContainerStyled,
   OptionSelectedStyled,
   OptionsSelectedContainerStyled,
   SubWrapperStyled,
 } from './style';
 
 /**
- * TODO: create dropdown option container component (optional prop to set columns grid)
- * TODO: move OptionsContainerStyled this inside dropdown option container
- * TODO: adjust max height ref
+ * TODO: replace magic number with constant variable (renderOptionsSelected)
  * TODO: implement theme (using styled components)
  * TODO: add some mock-up data to verify that the filter functionality based on options selected works
  * TODO: integrate QR codes to store React components into them ??
@@ -23,7 +19,6 @@ import {
 const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
   placeholderLabel = 'Choose an option',
   options,
-  optionsNumber = DEFAULT_OPTIONS_NUMBER,
   additionalStyle = {},
 }: MultiSelectDropdownProps) => {
   const [openDropdown, setOpenDropdown] = useState<boolean>(true);
@@ -61,20 +56,6 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
     []
   );
 
-  const optionsContainerRef = useCallback(
-    (el: HTMLDivElement) => {
-      if (el && options.length > 0) {
-        const firstChildren = [...el.children][0];
-        const firstChildrenHeight = firstChildren.clientHeight;
-        const maxContainerHeight = firstChildrenHeight * optionsNumber;
-
-        el.style.maxHeight = `${maxContainerHeight}px`;
-      }
-    },
-    [options, optionsNumber]
-  );
-
-  //TODO: replace magic number with constant variable (3)
   const renderOptionsSelected = (options: Map<string, string>) => {
     /* If the options are less than N elements, render those,
     otherwise render the first N elements + element containing the rest  */
@@ -122,14 +103,12 @@ const MultiSelectDropdown: FC<MultiSelectDropdownProps> = ({
       </SubWrapperStyled>
 
       {openDropdown && (
-        <OptionsContainerStyled ref={optionsContainerRef}>
-          <DropdownOptionContainer
-            options={options}
-            optionsIdSelected={[...optionsSelected.keys()]}
-            additionalStyle={{ paddingBottom: '1.5rem' }}
-            onOptionClick={handleOptionClick}
-          />
-        </OptionsContainerStyled>
+        <DropdownOptionContainer
+          options={options}
+          optionsIdSelected={[...optionsSelected.keys()]}
+          onOptionClick={handleOptionClick}
+          gridColumns={2}
+        />
       )}
     </DropdownContainerStyled>
   );

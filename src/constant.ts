@@ -1,1 +1,2 @@
-export const DEFAULT_OPTIONS_NUMBER = 5;
+export const DEFAULT_OPTIONS_ROWS = 4;
+export const DEFAULT_OPTIONS_COLUMNS = 1;

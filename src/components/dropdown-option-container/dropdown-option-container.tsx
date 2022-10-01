@@ -1,13 +1,24 @@
 import React, { FC, useRef } from 'react';
+import { useCallback } from 'react';
+import { DEFAULT_OPTIONS_COLUMNS, DEFAULT_OPTIONS_ROWS } from '../../constant';
 import { Checkbox } from '../checkbox';
 import { OptionType } from '../multi-select-dropdown/dto';
 import DropdownOptionContainerProps from './dto';
+import { OptionsContainerStyled } from './style';
 
+/**
+ *
+ * @param param0
+ * @returns
+ * TODO: replace inline style with styled component + pass gridColumns prop inside
+ */
 const DropdownOptionContainer: FC<DropdownOptionContainerProps> = ({
   options,
   optionsIdSelected,
   additionalStyle = {},
   onOptionClick,
+  rowsNumber = DEFAULT_OPTIONS_ROWS,
+  gridColumns = DEFAULT_OPTIONS_COLUMNS,
 }: DropdownOptionContainerProps) => {
   const additionalCheckboxStyle = useRef<React.CSSProperties>({
     padding: '0.5rem',
@@ -28,19 +39,31 @@ const DropdownOptionContainer: FC<DropdownOptionContainerProps> = ({
     );
   };
 
+  const optionContainerRef = useCallback(
+    (el: HTMLDivElement) => {
+      if (el && options.length > 0) {
+        const firstElement = [...el.children][0];
+        const firstElementHeight = firstElement.clientHeight;
+
+        const maxContainerHeight = firstElementHeight * rowsNumber;
+        el.style.maxHeight = `${maxContainerHeight}px`;
+      }
+    },
+    [options, rowsNumber]
+  );
+
   return (
-    <div style={{ ...additionalStyle }}>
+    <OptionsContainerStyled style={{ ...additionalStyle }}>
       <div
+        ref={optionContainerRef}
         style={{
-          border: '1px solid red',
           display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          padding: '1rem',
+          gridTemplateColumns: `repeat(${gridColumns}, 1fr)`,
         }}
       >
         {options.map(renderOption)}
       </div>
-    </div>
+    </OptionsContainerStyled>
   );
 };
 
